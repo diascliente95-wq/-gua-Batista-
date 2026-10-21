@@ -147,6 +147,89 @@
         <span><strong>⚠️ ATENÇÃO:</strong> Existem contas com <strong>mais de 30 dias</strong> em atraso. O corte de água pode ser executado imediatamente!</span>
     </div>
 
+
+    <!-- CRM ABastecimento de Água: navegação rápida -->
+    <style>
+      .crm-nav{display:flex;gap:10px;flex-wrap:wrap;margin:-10px 0 24px}
+      .crm-nav a{display:flex;align-items:center;gap:8px;text-decoration:none;background:#fff;color:#0b2b4a;border:1px solid #dbe5ef;padding:11px 15px;border-radius:12px;font-weight:700;box-shadow:0 3px 12px #0b2b4a0a}
+      .crm-nav a:hover,.crm-nav a:focus{background:#e0f2fe;border-color:#7dd3fc}
+      .crm-extra{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:20px;margin:0 0 24px;box-shadow:0 4px 16px #0f172a08}
+      .crm-extra h2{font-size:1.1rem;color:#0b2b4a;margin-bottom:6px}
+      .crm-extra p{color:#64748b;font-size:.9rem;margin-bottom:16px}
+      .crm-extra-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+      .crm-extra label{display:block;font-size:.82rem;font-weight:700;margin-bottom:5px;color:#334155}
+      .crm-extra input,.crm-extra select,.crm-extra textarea{width:100%;padding:11px 12px;border:1px solid #cbd5e1;border-radius:10px;font:inherit;background:#f8fafc}
+      .crm-extra button{border:0;border-radius:10px;background:#0b2b4a;color:#fff;padding:11px 15px;font-weight:700;cursor:pointer}
+      .crm-extra .muted{background:#e2e8f0;color:#0f172a}
+      .crm-extra table{min-width:640px;font-size:.88rem}
+      .crm-extra th,.crm-extra td{padding:10px 12px}
+      .crm-section-title{display:flex;align-items:center;gap:10px;margin:4px 0 12px;color:#0b2b4a}
+      .crm-empty{color:#64748b;padding:10px 0}
+      @media(max-width:600px){.crm-extra{padding:15px}.crm-nav a{flex:1;justify-content:center}.crm-extra-grid{grid-template-columns:1fr}}
+    </style>
+    <nav class="crm-nav" aria-label="Atalhos do CRM">
+      <a href="#moradores"><i class="fas fa-users"></i> Moradores</a>
+      <a href="#medicoes"><i class="fas fa-gauge"></i> Leituras</a>
+      <a href="#ocorrencias"><i class="fas fa-screwdriver-wrench"></i> Ocorrências</a>
+      <a href="#tableBody"><i class="fas fa-file-invoice-dollar"></i> Contas</a>
+      <a href="#relatorios"><i class="fas fa-chart-column"></i> Relatórios</a>
+    </nav>
+    <section class="crm-extra" id="moradores">
+      <h2><i class="fas fa-users"></i> Cadastro de moradores e ligações</h2>
+      <p>Cadastro complementar local para organizar endereço, matrícula e contato. Os dados ficam neste navegador até integrar um banco de dados.</p>
+      <form id="moradorForm">
+        <div class="crm-extra-grid">
+          <div><label for="mNome">Nome do morador *</label><input id="mNome" required maxlength="100" placeholder="Nome completo"></div>
+          <div><label for="mMatricula">Matrícula / ligação *</label><input id="mMatricula" required maxlength="40" placeholder="Ex.: AG-001"></div>
+          <div><label for="mTelefone">Telefone</label><input id="mTelefone" type="tel" maxlength="25" placeholder="WhatsApp"></div>
+          <div><label for="mEndereco">Endereço</label><input id="mEndereco" maxlength="180" placeholder="Rua, número, comunidade"></div>
+          <div><label for="mHidrometro">Número do hidrômetro</label><input id="mHidrometro" maxlength="60" placeholder="Identificação do medidor"></div>
+          <div><label for="mSituacao">Situação da ligação</label><select id="mSituacao"><option>Ativa</option><option>Em manutenção</option><option>Suspensa</option></select></div>
+        </div>
+        <p style="margin-top:12px"><button type="submit">Salvar morador</button> <button class="muted" type="button" id="mCancelar" hidden>Cancelar edição</button></p>
+      </form>
+      <div class="table-wrapper" style="margin-top:16px"><table style="min-width:780px"><thead><tr><th>Nome</th><th>Matrícula</th><th>Telefone</th><th>Endereço</th><th>Hidrômetro</th><th>Situação</th><th>Ações</th></tr></thead><tbody id="moradoresBody"></tbody></table></div>
+    </section>
+    <section class="crm-extra" id="medicoes">
+      <h2><i class="fas fa-gauge"></i> Leituras de hidrômetros</h2>
+      <p>Registre a leitura anterior e atual. O consumo é calculado em m³. Esta função organiza leituras; não calcula valores tarifários sem configurar a tarifa local.</p>
+      <form id="leituraForm">
+        <div class="crm-extra-grid">
+          <div><label for="lMatricula">Matrícula do morador *</label><input id="lMatricula" required maxlength="40" placeholder="Ex.: AG-001"></div>
+          <div><label for="lMes">Mês de referência *</label><input id="lMes" type="month" required></div>
+          <div><label for="lAnterior">Leitura anterior (m³) *</label><input id="lAnterior" type="number" min="0" step="0.001" required></div>
+          <div><label for="lAtual">Leitura atual (m³) *</label><input id="lAtual" type="number" min="0" step="0.001" required></div>
+        </div>
+        <p style="margin-top:12px"><button type="submit">Salvar leitura</button></p>
+      </form>
+      <div class="table-wrapper" style="margin-top:16px"><table><thead><tr><th>Matrícula</th><th>Referência</th><th>Anterior</th><th>Atual</th><th>Consumo (m³)</th><th>Data de registro</th><th>Ações</th></tr></thead><tbody id="leiturasBody"></tbody></table></div>
+    </section>
+    <section class="crm-extra" id="ocorrencias">
+      <h2><i class="fas fa-screwdriver-wrench"></i> Manutenção e ocorrências</h2>
+      <p>Registre vazamentos, falta d’água, problemas de pressão e reparos na rede.</p>
+      <form id="ocorrenciaForm">
+        <div class="crm-extra-grid">
+          <div><label for="oTipo">Tipo *</label><select id="oTipo"><option>Falta d'água</option><option>Vazamento</option><option>Baixa pressão</option><option>Hidrômetro</option><option>Manutenção de rede</option><option>Outro</option></select></div>
+          <div><label for="oLocal">Local *</label><input id="oLocal" required maxlength="150" placeholder="Rua / bairro / comunidade"></div>
+          <div><label for="oResponsavel">Responsável</label><input id="oResponsavel" maxlength="100" placeholder="Nome da equipe"></div>
+          <div><label for="oStatus">Status</label><select id="oStatus"><option>Aberta</option><option>Em atendimento</option><option>Resolvida</option></select></div>
+          <div style="grid-column:1/-1"><label for="oDescricao">Descrição</label><textarea id="oDescricao" rows="2" maxlength="600" placeholder="Descreva a ocorrência e providências tomadas"></textarea></div>
+        </div>
+        <p style="margin-top:12px"><button type="submit">Registrar ocorrência</button></p>
+      </form>
+      <div class="table-wrapper" style="margin-top:16px"><table><thead><tr><th>Data</th><th>Tipo</th><th>Local</th><th>Responsável</th><th>Status</th><th>Descrição</th><th>Ações</th></tr></thead><tbody id="ocorrenciasBody"></tbody></table></div>
+    </section>
+    <section class="crm-extra" id="relatorios">
+      <h2><i class="fas fa-chart-column"></i> Relatórios do CRM</h2>
+      <p>Veja totais cadastrais e exporte os registros complementares em CSV para abrir no Excel.</p>
+      <div class="crm-extra-grid">
+        <div><label>Moradores cadastrados</label><input id="rMoradores" readonly value="0"></div>
+        <div><label>Leituras registradas</label><input id="rLeituras" readonly value="0"></div>
+        <div><label>Ocorrências abertas</label><input id="rOcorrencias" readonly value="0"></div>
+      </div>
+      <p style="margin-top:12px"><button type="button" id="exportarCRM">Exportar dados do CRM (CSV)</button></p>
+    </section>
+
     <!-- STATS -->
     <div class="stats-grid">
         <div class="stat-card"><div class="label"><i class="fas fa-file-invoice"></i> Total de Contas</div><div class="value" id="totalContas">0</div></div>
@@ -276,6 +359,8 @@
         render();
     }
     function saveToStorage() { localStorage.setItem(STORAGE_KEY, JSON.stringify(contas)); }
+    // Salva alterações das contas originais sem mudar o formato de armazenamento.
+
 
     // ===================== CÁLCULOS =====================
     function getToday() { const d=new Date(); d.setHours(0,0,0,0); return d; }
@@ -811,9 +896,126 @@
     document.getElementById('historicoModal').addEventListener('click', function(e) { if (e.target === this) fecharHistorico(); });
     document.getElementById('contratoModal').addEventListener('click', function(e) { if (e.target === this) fecharContrato(); });
 
-    // ===================== INICIAR =====================
+
+    // ===================== CRM ABASTECIMENTO DE ÁGUA =====================
+    const CRM_KEYS = {
+      moradores: 'sj_crm_moradores_v1',
+      leituras: 'sj_crm_leituras_v1',
+      ocorrencias: 'sj_crm_ocorrencias_v1'
+    };
+    let moradoresCRM = [], leiturasCRM = [], ocorrenciasCRM = [], editMoradorId = null;
+    function lerCRM(key, fallback=[]) {
+      try { const v = JSON.parse(localStorage.getItem(key) || 'null'); return Array.isArray(v) ? v : fallback; }
+      catch (_) { return fallback; }
+    }
+    function salvarCRM() {
+      try {
+        localStorage.setItem(CRM_KEYS.moradores, JSON.stringify(moradoresCRM));
+        localStorage.setItem(CRM_KEYS.leituras, JSON.stringify(leiturasCRM));
+        localStorage.setItem(CRM_KEYS.ocorrencias, JSON.stringify(ocorrenciasCRM));
+      } catch (e) { alert('Não foi possível guardar os dados neste navegador. Exporte um backup CSV.'); }
+    }
+    function escCRM(v) {
+      return String(v ?? '').replace(/[&<>"']/g, ch => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[ch]));
+    }
+    function desenharMoradores() {
+      const tb = document.getElementById('moradoresBody'); if (!tb) return;
+      tb.innerHTML = moradoresCRM.length ? moradoresCRM.map(m => `<tr>
+        <td>${escCRM(m.nome)}</td><td>${escCRM(m.matricula)}</td><td>${escCRM(m.telefone || '-')}</td>
+        <td>${escCRM(m.endereco || '-')}</td><td>${escCRM(m.hidrometro || '-')}</td><td>${escCRM(m.situacao)}</td>
+        <td><button class="btn btn-primary btn-sm" type="button" onclick="editarMoradorCRM('${m.id}')">Editar</button>
+        <button class="btn btn-danger btn-sm" type="button" onclick="excluirMoradorCRM('${m.id}')">Excluir</button></td></tr>`).join('')
+        : '<tr><td colspan="7" class="crm-empty">Nenhum morador cadastrado.</td></tr>';
+      document.getElementById('rMoradores').value = moradoresCRM.length;
+    }
+    function editarMoradorCRM(id) {
+      const m = moradoresCRM.find(x => x.id === id); if (!m) return;
+      editMoradorId = id;
+      document.getElementById('mNome').value=m.nome; document.getElementById('mMatricula').value=m.matricula;
+      document.getElementById('mTelefone').value=m.telefone || ''; document.getElementById('mEndereco').value=m.endereco || '';
+      document.getElementById('mHidrometro').value=m.hidrometro || ''; document.getElementById('mSituacao').value=m.situacao || 'Ativa';
+      document.getElementById('mCancelar').hidden=false;
+      document.getElementById('moradores').scrollIntoView({behavior:'smooth'});
+    }
+    function limparMoradorForm() {
+      document.getElementById('moradorForm').reset(); editMoradorId=null; document.getElementById('mCancelar').hidden=true;
+    }
+    function excluirMoradorCRM(id) {
+      if (!confirm('Excluir este morador do cadastro do CRM? As contas e leituras já lançadas não serão apagadas.')) return;
+      moradoresCRM = moradoresCRM.filter(x => x.id !== id); salvarCRM(); desenharMoradores(); desenharRelatorios();
+    }
+    function desenharLeituras() {
+      const tb = document.getElementById('leiturasBody'); if (!tb) return;
+      tb.innerHTML = leiturasCRM.length ? [...leiturasCRM].sort((a,b)=>b.mes.localeCompare(a.mes)).map(l=>`<tr>
+        <td>${escCRM(l.matricula)}</td><td>${escCRM(l.mes)}</td><td>${Number(l.anterior).toLocaleString('pt-BR')}</td>
+        <td>${Number(l.atual).toLocaleString('pt-BR')}</td><td><strong>${(Number(l.atual)-Number(l.anterior)).toLocaleString('pt-BR')} m³</strong></td>
+        <td>${new Date(l.criadoEm).toLocaleDateString('pt-BR')}</td>
+        <td><button class="btn btn-danger btn-sm" type="button" onclick="excluirLeituraCRM('${l.id}')">Excluir</button></td></tr>`).join('')
+        : '<tr><td colspan="7" class="crm-empty">Nenhuma leitura registrada.</td></tr>';
+      document.getElementById('rLeituras').value = leiturasCRM.length;
+    }
+    function excluirLeituraCRM(id) {
+      if (!confirm('Excluir esta leitura?')) return;
+      leiturasCRM=leiturasCRM.filter(x=>x.id!==id); salvarCRM(); desenharLeituras(); desenharRelatorios();
+    }
+    function desenharOcorrencias() {
+      const tb = document.getElementById('ocorrenciasBody'); if (!tb) return;
+      tb.innerHTML = ocorrenciasCRM.length ? [...ocorrenciasCRM].sort((a,b)=>b.criadoEm.localeCompare(a.criadoEm)).map(o=>`<tr>
+        <td>${new Date(o.criadoEm).toLocaleDateString('pt-BR')}</td><td>${escCRM(o.tipo)}</td><td>${escCRM(o.local)}</td>
+        <td>${escCRM(o.responsavel || '-')}</td><td>${escCRM(o.status)}</td><td>${escCRM(o.descricao || '-')}</td>
+        <td><button class="btn btn-danger btn-sm" type="button" onclick="excluirOcorrenciaCRM('${o.id}')">Excluir</button></td></tr>`).join('')
+        : '<tr><td colspan="7" class="crm-empty">Nenhuma ocorrência registrada.</td></tr>';
+      document.getElementById('rOcorrencias').value = ocorrenciasCRM.filter(o=>o.status!=='Resolvida').length;
+    }
+    function excluirOcorrenciaCRM(id) {
+      if (!confirm('Excluir esta ocorrência?')) return;
+      ocorrenciasCRM=ocorrenciasCRM.filter(x=>x.id!==id); salvarCRM(); desenharOcorrencias(); desenharRelatorios();
+    }
+    function desenharRelatorios() { desenharMoradores(); desenharLeituras(); desenharOcorrencias(); }
+    function exportarCRMCsv() {
+      const rows=[['Tipo','Nome/Matrícula','Telefone','Endereço','Hidrômetro','Referência','Leitura anterior','Leitura atual','Consumo m³','Data','Status','Detalhes']];
+      moradoresCRM.forEach(m=>rows.push(['Morador',m.nome,m.matricula,m.telefone,m.endereco,m.hidrometro,'','','','',m.situacao,'']));
+      leiturasCRM.forEach(l=>rows.push(['Leitura',l.matricula,'','','',l.mes,l.anterior,l.atual,Number(l.atual)-Number(l.anterior),l.criadoEm,'','']));
+      ocorrenciasCRM.forEach(o=>rows.push(['Ocorrência','','','', '', '', '', '', '',o.criadoEm,o.status,`${o.tipo} | ${o.local} | ${o.responsavel || ''} | ${o.descricao || ''}`]));
+      const csv='\uFEFF'+rows.map(row=>row.map(v=>'"'+String(v ?? '').replace(/"/g,'""')+'"').join(';')).join('\r\n');
+      const url=URL.createObjectURL(new Blob([csv],{type:'text/csv;charset=utf-8;'}));
+      const a=document.createElement('a'); a.href=url; a.download='crm-abastecimento-agua.csv'; a.click(); URL.revokeObjectURL(url);
+    }
+    function iniciarCRMAgua() {
+      moradoresCRM=lerCRM(CRM_KEYS.moradores); leiturasCRM=lerCRM(CRM_KEYS.leituras); ocorrenciasCRM=lerCRM(CRM_KEYS.ocorrencias);
+      document.getElementById('moradorForm').addEventListener('submit', e=>{
+        e.preventDefault();
+        const matricula=document.getElementById('mMatricula').value.trim();
+        const nome=document.getElementById('mNome').value.trim();
+        if (moradoresCRM.some(m=>m.matricula.toLowerCase()===matricula.toLowerCase() && m.id!==editMoradorId)) { alert('Já existe um morador com esta matrícula.'); return; }
+        const old=moradoresCRM.find(m=>m.id===editMoradorId);
+        const item={id:editMoradorId || (crypto.randomUUID ? crypto.randomUUID() : String(Date.now())),nome,matricula,telefone:document.getElementById('mTelefone').value.trim(),endereco:document.getElementById('mEndereco').value.trim(),hidrometro:document.getElementById('mHidrometro').value.trim(),situacao:document.getElementById('mSituacao').value,criadoEm:old?.criadoEm || new Date().toISOString()};
+        if(old) moradoresCRM=moradoresCRM.map(m=>m.id===editMoradorId?item:m); else moradoresCRM.push(item);
+        salvarCRM(); desenharRelatorios(); limparMoradorForm();
+      });
+      document.getElementById('mCancelar').addEventListener('click', limparMoradorForm);
+      document.getElementById('leituraForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        const matricula=document.getElementById('lMatricula').value.trim(), mes=document.getElementById('lMes').value;
+        const anterior=Number(document.getElementById('lAnterior').value), atual=Number(document.getElementById('lAtual').value);
+        if(atual<anterior){alert('A leitura atual não pode ser menor que a anterior.');return;}
+        if(leiturasCRM.some(l=>l.matricula.toLowerCase()===matricula.toLowerCase()&&l.mes===mes)){alert('Já existe uma leitura para esta matrícula neste mês.');return;}
+        leiturasCRM.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),matricula,mes,anterior,atual,criadoEm:new Date().toISOString()});
+        salvarCRM();desenharRelatorios();document.getElementById('leituraForm').reset();
+      });
+      document.getElementById('ocorrenciaForm').addEventListener('submit',e=>{
+        e.preventDefault();
+        ocorrenciasCRM.push({id:crypto.randomUUID?crypto.randomUUID():String(Date.now()),tipo:document.getElementById('oTipo').value,local:document.getElementById('oLocal').value.trim(),responsavel:document.getElementById('oResponsavel').value.trim(),status:document.getElementById('oStatus').value,descricao:document.getElementById('oDescricao').value.trim(),criadoEm:new Date().toISOString()});
+        salvarCRM();desenharRelatorios();document.getElementById('ocorrenciaForm').reset();
+      });
+      document.getElementById('exportarCRM').addEventListener('click',exportarCRMCsv);
+      desenharRelatorios();
+    }
+
+        // ===================== INICIAR =====================
     loadFromStorage();
     if (contas.length === 0) loadSampleData();
+    iniciarCRMAgua();
 </script>
 </body>
 </html>
